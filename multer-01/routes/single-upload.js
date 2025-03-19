@@ -12,7 +12,6 @@ router.get('/' , (req , res)=>{
 
 
 // file storage : 
-
 let storage = multer.diskStorage({
     destination : (req , file , cb) => cb(null , 'uploads/') , 
     filename : (req , file , cb)=>{
@@ -28,34 +27,37 @@ let upload = multer({
 
 router.post('/upload' , (req ,res)=>{
      
-     upload(req , res , async(err)=>{
+    
+
+        upload(req , res , async(err)=>{
+               
+             if(err){
+                return res.status(500).send({
+                    error : {
+                        msg : err.message , 
+                        "Max File size valid" : "100 MB"
+                    }
+                })
+            }
             
-             
             if(!req.file)
             {
                 return res.status(400).json({
-                    error : "All fields are required"
+                    error : "File not chosen"
                 })
             }
-
-            
-
-            if(err){
-                return res.status(500).send({
-                    error : err.message
-                })
-            }
-
-        
-        // store in the db :
-
-        console.log('file uploaded successfully ...')
-        return res.status(200).send({
-            msg : "file uploaded successfully"
-        })
+           
+           
+   
+           console.log('file uploaded successfully ...')
+           return res.status(200).send({
+               msg : "file uploaded successfully"
+           })
+       
+   
+      })
     
-
-   })
+   
 
 })
 
